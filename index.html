@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleTODO</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+    
+        /* ----- ШАПКА ----- */
+        .navbar {
+            background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%) !important;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3) !important;
+            padding: 14px 0 !important;
+        }
+
+        .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 700 !important;
+            font-size: 1.3rem !important;
+            letter-spacing: -0.5px !important;
+        }
+
+        .navbar .nav-link {
+            color: rgba(255, 255, 255, 0.85) !important;
+            transition: color 0.2s ease !important;
+        }
+
+        .navbar .nav-link:hover {
+            color: #ffffff !important;
+        }
+
+        .navbar .nav-link.active {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+        }
+
+        /* Поля ввода в шапке */
+        .navbar .form-control {
+            background: rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+            border: 2px solid transparent !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .navbar .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6) !important;
+        }
+
+        .navbar .form-control:focus {
+            background: rgba(255, 255, 255, 0.25) !important;
+            border-color: #c4b5fd !important;
+            box-shadow: 0 0 0 3px rgba(196, 181, 253, 0.3) !important;
+            color: #ffffff !important;
+        }
+
+        /* Кнопка входа */
+        .navbar .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.4) !important;
+            color: #ffffff !important;
+            border-radius: 10px !important;
+            transition: all 0.3s ease !important;
+            font-weight: 500 !important;
+            padding: 8px 20px !important;
+        }
+
+        .navbar .btn-outline-light:hover {
+            background: #ffffff !important;
+            color: #7c3aed !important;
+            border-color: #ffffff !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3) !important;
+        }
+
+        /* Кнопка выхода */
+        #logout-item .nav-link {
+            color: rgba(255, 200, 200, 0.9) !important;
+        }
+
+        #logout-item .nav-link:hover {
+            color: #ff6b6b !important;
+        }
+
+        /* ----- ОБЩИЙ ФОН ----- */
+        body {
+            background: linear-gradient(135deg, #f8f0ff 0%, #f0e6ff 100%);
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #2d1b4e;
+        }
+
+        /* ----- ЗАГОЛОВОК ДОСКИ ----- */
+        .kanban-header {
+            padding: 20px 0 15px 0;
+        }
+
+        .kanban-header h1 {
+            color: #2d1b4e;
+            font-weight: 700;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 16px;
+            margin: 12px 0 8px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 6px 18px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 92, 201, 0.15);
+        }
+
+        .stat-label {
+            color: #6c3b9e;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            color: #4a1a7a;
+            font-weight: 700;
+            margin-left: 4px;
+            font-size: 14px;
+        }
+
+        .user-info {
+            display: none !important;
+        }
+
+        /* ----- КАНБАН-ДОСКА ----- */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .kanban-column {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 18px 16px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(138, 92, 201, 0.12);
+            box-shadow: 0 8px 32px rgba(124, 58, 237, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .kanban-column:hover {
+            border-color: rgba(138, 92, 201, 0.25);
+            box-shadow: 0 12px 48px rgba(124, 58, 237, 0.1);
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(138, 92, 201, 0.1);
+        }
+
+        .column-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #2d1b4e;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+
+        .task-count {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: #ffffff;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .task-list {
+            flex: 1;
+            min-height: 200px;
+            margin-bottom: 16px;
+        }
+
+        /* ----- КАРТОЧКИ ЗАДАЧ ----- */
+        .task-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(138, 92, 201, 0.1);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.04);
+        }
+
+        .task-card:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);
+            border-color: #a78bfa;
+        }
+
+        .task-card-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2d1b4e;
+            margin: 0 0 4px 0;
+        }
+
+        .task-card-description {
+            font-size: 13px;
+            color: #7a5a9e;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* ----- КНОПКА ----- */
+        .column-footer {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid rgba(138, 92, 201, 0.08);
+        }
+
+        .add-task-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: rgba(138, 92, 201, 0.06);
+            color: #6c3b9e;
+            border: 2px dashed rgba(138, 92, 201, 0.2);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* Активная кнопка */
+        .add-task-btn:not(:disabled) {
+            background: rgba(138, 92, 201, 0.08);
+            border-color: #a78bfa;
+            color: #6c3b9e;
+        }
+
+        .add-task-btn:not(:disabled):hover {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: #ffffff;
+            border-color: #7c3aed;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(124, 58, 237, 0.2);
+            cursor: pointer;
+        }
+
+        .add-task-btn:not(:disabled):active {
+            transform: scale(0.98);
+        }
+
+        /* Отключенная кнопка */
+        .add-task-btn:disabled {
+            background: rgba(138, 92, 201, 0.03);
+            color: #b8a0d0;
+            border-color: rgba(138, 92, 201, 0.1);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .add-task-btn:disabled:hover {
+            background: rgba(138, 92, 201, 0.03);
+            color: #b8a0d0;
+            border-color: rgba(138, 92, 201, 0.1);
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* ----- УВЕДОМЛЕНИЯ ----- */
+        .alert {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.08);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            color: #2e7d32;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            color: #e65100;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            color: #6c3b9e;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
+            color: #c62828;
+        }
+
+        /* ----- АНИМАЦИИ ----- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-card {
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .task-count {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* ----- АДАПТИВНОСТЬ ----- */
+        @media (max-width: 1024px) {
+            .kanban-board {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .kanban-board {
+                grid-template-columns: 1fr;
+            }
+
+            .kanban-column {
+                min-height: 280px;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .navbar-brand {
+                font-size: 1.1rem !important;
+            }
+        }
+
+        /* ----- СКРОЛЛ ----- */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(138, 92, 201, 0.05);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    📋 SimpleTODO
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item" id="logout-item" style="display: none;">
+                            <a class="nav-link" href="#" id="logout-btn">Log Out</a>
+                        </li>
+                    </ul>
+
+                    <!-- Форма входа -->
+                    <form id="app-login-form" class="d-flex" role="search">
+                        <input class="form-control me-2" name="login" autocomplete="username" type="text"
+                            placeholder="Login" aria-label="Login" required>
+                        <input class="form-control me-2" name="password" autocomplete="current-password" type="password"
+                            placeholder="Password" aria-label="Password" required>
+                        <button id="app-login-btn" class="btn btn-outline-light" type="submit">Sign In</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container-fluid mt-4">
+        <section id="alert-container" aria-label="Уведомления"></section>
+
+        <section id="content" aria-label="Содержимое">
+
+            <!-- ===== КАНБАН-ДОСКА (СКРЫТА ПО УМОЛЧАНИЮ) ===== -->
+            <div id="kanban-board" style="display: none !important;">
+                <header class="kanban-header">
+                    <h1>📋 SimpleTODO</h1>
+                    <div class="stats">
+                        <span class="stat-item">
+                            <span class="stat-label">Active tasks:</span>
+                            <span class="stat-value" id="active-tasks-count">0</span>
+                        </span>
+                        <span class="stat-item">
+                            <span class="stat-label">Finished tasks:</span>
+                            <span class="stat-value" id="finished-tasks-count">0</span>
+                        </span>
+                        <span class="stat-item">
+                            <span class="stat-label">👤</span>
+                            <span class="stat-value" id="user-name">User</span>
+                        </span>
+                    </div>
+                    <div class="user-info">
+                        Kanban board by <span id="user-name-full">User</span>, 2024
+                    </div>
+                </header>
+
+                <div class="kanban-board">
+
+                    <!-- КОЛОНКА 1: BACKLOG -->
+                    <section class="kanban-column" data-column="backlog">
+                        <header class="column-header">
+                            <h2 class="column-title">Backlog</h2>
+                            <span class="task-count" id="backlog-count">0</span>
+                        </header>
+                        <div class="task-list" id="backlog-tasks"></div>
+                        <footer class="column-footer">
+                            <button class="add-task-btn" id="add-backlog-btn" disabled>
+                                + Add card
+                            </button>
+                        </footer>
+                    </section>
+
+                    <!-- КОЛОНКА 2: READY -->
+                    <section class="kanban-column" data-column="ready">
+                        <header class="column-header">
+                            <h2 class="column-title">Ready</h2>
+                            <span class="task-count" id="ready-count">0</span>
+                        </header>
+                        <div class="task-list" id="ready-tasks"></div>
+                        <footer class="column-footer">
+                            <button class="add-task-btn" id="add-ready-btn" disabled>
+                                + Add card
+                            </button>
+                        </footer>
+                    </section>
+
+                    <!-- КОЛОНКА 3: IN PROGRESS -->
+                    <section class="kanban-column" data-column="inprogress">
+                        <header class="column-header">
+                            <h2 class="column-title">In Progress</h2>
+                            <span class="task-count" id="inprogress-count">0</span>
+                        </header>
+                        <div class="task-list" id="inprogress-tasks"></div>
+                        <footer class="column-footer">
+                            <button class="add-task-btn" id="add-inprogress-btn" disabled>
+                                + Add card
+                            </button>
+                        </footer>
+                    </section>
+
+                    <!-- КОЛОНКА 4: FINISHED -->
+                    <section class="kanban-column" data-column="finished">
+                        <header class="column-header">
+                            <h2 class="column-title">Finished</h2>
+                            <span class="task-count" id="finished-count">0</span>
+                        </header>
+                        <div class="task-list" id="finished-tasks"></div>
+                        <footer class="column-footer">
+                            <button class="add-task-btn" id="add-finished-btn" disabled>
+                                + Add card
+                            </button>
+                        </footer>
+                    </section>
+
+                </div>
+            </div>
+            <!-- ===== КОНЕЦ КАНБАН-ДОСКИ ===== -->
+
+            <!-- Сообщение для неавторизованных -->
+            <p id="login-message" class="text-center fs-4">Please Sign In to see your tasks!</p>
+
+        </section>
+    </main>
+
+    <div class="modal fade" id="taskModal" tabindex="-1" aria-labelledby="taskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <header class="modal-header">
+                    <h5 class="modal-title" id="taskModalLabel">Новая задача</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                </header>
+                <form id="task-form">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="task-title" class="form-label">Название</label>
+                            <input type="text" class="form-control" id="task-title" placeholder="New task title..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task-description" class="form-label">Описание</label>
+                            <textarea class="form-control" id="task-description" rows="3" placeholder="Description..."></textarea>
+                        </div>
+                    </div>
+                    <footer class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="submit" class="btn btn-primary">Создать</button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script type="module" src="app.js"></script>
+
+</body>
+
+</html>

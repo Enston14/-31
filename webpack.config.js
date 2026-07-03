@@ -6,10 +6,16 @@ module.exports = {
   entry: "./src/app.js",
   output: {
     filename: "bundle.[chunkhash].js",
-    path: path.resolve(__dirname, "public"),
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "/",
   },
   devServer: {
     port: 3000,
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
+    hot: true,
+    open: true,
   },
   plugins: [
     new HTMLPlugin({
@@ -25,15 +31,9 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader",
-            options: {
-              minimize: true,
-            },
-          },
-        ],
+        use: ["html-loader"],
       },
     ],
   },
+  mode: "development",
 };

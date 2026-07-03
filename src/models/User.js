@@ -1,13 +1,18 @@
-import { BaseModel } from "./BaseModel";
-import { getFromStorage, addToStorage } from "../utils";
+// src/models/User.js
+
+// ✅ ДОБАВЛЯЕМ .js В КОНЦЕ КАЖДОГО ИМПОРТА
+import { BaseModel } from "./BaseModel.js";
+import { getFromStorage, addToStorage } from "../utils.js";
 
 export class User extends BaseModel {
-  constructor(login, password) {
+  constructor(login, password, role = 'user') {
     super();
     this.login = login;
     this.password = password;
+    this.role = role;
     this.storageKey = "users";
   }
+  
   get hasAccess() {
     let users = getFromStorage(this.storageKey);
     if (users.length == 0) return false;
@@ -17,6 +22,7 @@ export class User extends BaseModel {
     }
     return false;
   }
+  
   static save(user) {
     try {
       addToStorage(user, user.storageKey);

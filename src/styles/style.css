@@ -1,3 +1,126 @@
-#app-login-btn {
-  width: 160px;
+/* ===== ПОЛЕ ВВОДА ДЛЯ BACKLOG ===== */
+.task-input-wrapper {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+    align-items: center;
+    animation: fadeInUp 0.3s ease;
+}
+
+.task-input-wrapper .task-input {
+    flex: 1;
+    border-radius: 8px;
+    border: 2px solid #7c3aed;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+.task-input-wrapper .task-input:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    outline: none;
+}
+
+.task-input-wrapper .task-submit-btn {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.task-input-wrapper .task-submit-btn:hover {
+    background: #6d28d9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.task-input-wrapper .task-cancel-btn {
+    background: #e5e7eb;
+    color: #4b5563;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.task-input-wrapper .task-cancel-btn:hover {
+    background: #d1d5db;
+}
+
+/* ===== ДРОПДАУН ===== */
+.dropdown-wrapper {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+    align-items: center;
+    animation: fadeInUp 0.3s ease;
+    flex-wrap: wrap;
+}
+
+.dropdown-wrapper .task-dropdown {
+    flex: 1;
+    border-radius: 8px;
+    border: 2px solid #7c3aed;
+    padding: 8px 12px;
+    font-size: 14px;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.dropdown-wrapper .task-dropdown:focus {
+    border-color: #7c3aed;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    outline: none;
+}
+
+.dropdown-wrapper .task-dropdown option {
+    padding: 4px 8px;
+}
+
+.dropdown-wrapper .task-dropdown option:hover {
+    background: #7c3aed;
+    color: white;
+}
+
+.dropdown-wrapper .task-submit-btn {
+    background: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-wrapper .task-submit-btn:hover:not(:disabled) {
+    background: #6d28d9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.dropdown-wrapper .task-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dropdown-wrapper .task-cancel-btn {
+    background: #e5e7eb;
+    color: #4b5563;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.dropdown-wrapper .task-cancel-btn:hover {
+    background: #d1d5db;
 }
